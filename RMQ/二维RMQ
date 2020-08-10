@@ -1,0 +1,28 @@
+void RMQ(){
+	memset(maxx,0,sizeof(maxx));
+	memset(minn,0,sizeof(minn));
+	for(int i=1;i<=n;i++){
+		for(int j=1;j<=n;j++){
+			maxx[i][j][0]=a[i][j];
+			minn[i][j][0]=a[i][j];
+		}
+	}
+	
+	for(int i=1;i<=n;i++){
+		for(int j=1;(1<<j)<=n;j++){
+			int t = 1 << (j - 1);
+			for(int d = 1;d + (1 << j) - 1 <= n;d++){
+				maxx[i][d][j]=max(maxx[i][d][j-1],maxx[i][d+t][j-1]);
+				minn[i][d][j]=min(minn[i][d][j-1],minn[i][d+t][j-1]);
+			}
+		}
+	}
+}
+int max1=0,min1=INF;
+int solve(int l,int r,int b){
+	int g=log2(b);
+	for(int i = l;i < l + b;i++){
+		min1 = min(min(minn[i][r][g], minn[i][r+b-(1<<g)][g]), min1);
+		max1 = max(max(maxx[i][r][g], maxx[i][r+b-(1<<g)][g]), max1);
+	}
+}
